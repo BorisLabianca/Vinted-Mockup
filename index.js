@@ -21,6 +21,10 @@ const offerRoutes = require("./routes/offer");
 app.use(userRoutes);
 app.use(offerRoutes);
 
+app.get("/", (req, res) => {
+  res.json({ message: "🎉C'est le serveur de Bobo !!!!🥳" });
+});
+
 app.all("*", (req, res) => {
   res.status(404).json("Page introuvable");
 });
