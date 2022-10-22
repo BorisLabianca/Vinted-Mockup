@@ -59,18 +59,42 @@ router.post(
         );
         newOffer.product_image = uploadedPicture;
       }
+      // if (req.files?.picture && req.files.picture.length !== 0) {
+      //   const arrayOfPicturesUrl = [];
+      //   req.files.picture.forEach(async (file) => {
+      //     const result = await cloudinary.uploader.upload(
+      //       convertToBase64(file),
+      //       { folder: `/vinted/offer/${newOffer.id}` }
+      //     );
+      //     arrayOfPicturesUrl.push(result.secure_url);
+      //     if (arrayOfPicturesUrl.length === req.files.picture.length) {
+      //       return arrayOfPicturesUrl;
+      //     }
+      //     console.log(arrayOfPicturesUrl);
+      //   });
+      //   newOffer.product_pictures = arrayOfPicturesUrl;
+      // }
       if (req.files?.picture && req.files.picture.length !== 0) {
         const arrayOfPicturesUrl = [];
-        req.files.picture.forEach(async (file) => {
-          const result = await cloudinary.uploader.upload(
-            convertToBase64(file),
-            { folder: `/vinted/offer/${newOffer.id}` }
+        // const getUrls = async () => {
+        for (let i = 0; i < req.files.picture.length; i++) {
+          let result = await cloudinary.uploader.upload(
+            convertToBase64(req.files.picture[i]),
+            {
+              folder: `/vinted/offer/${newOffer.id}`,
+            }
           );
           arrayOfPicturesUrl.push(result.secure_url);
-          console.log(arrayOfPicturesUrl);
-        });
+          // if (arrayOfPicturesUrl.length === req.files.picture.length) {
+          //   return arrayOfPicturesUrl;
+          // }
+        }
+
+        // };
+        // console.log(arrayOfPicturesUrl);
         newOffer.product_pictures = arrayOfPicturesUrl;
       }
+
       // console.log(newOffer);
       // await newOffer.save();
       // console.log(req.files.picture);
