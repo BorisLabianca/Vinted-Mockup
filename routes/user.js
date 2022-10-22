@@ -41,7 +41,7 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
       hash: hash,
       salt: salt,
     });
-    await newUser.save();
+    // await newUser.save();
     // const savedData = await User.findOne({ email: email });
     // console.log(savedData._id);
     const userId = newUser.id;

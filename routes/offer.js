@@ -50,18 +50,30 @@ router.post(
         ],
         owner: req.user,
       });
-      if (req.files?.picture) {
+      if (req.files?.image) {
         const uploadedPicture = await cloudinary.uploader.upload(
-          convertToBase64(req.files.picture),
+          convertToBase64(req.files.image),
           {
             folder: `/vinted/offer/${newOffer.id}`,
           }
         );
         newOffer.product_image = uploadedPicture;
       }
+      if (req.files?.picture && req.files.picture.length !== 0) {
+        const arrayOfPicturesUrl = [];
+        req.files.picture.forEach(async (file) => {
+          const result = await cloudinary.uploader.upload(
+            convertToBase64(file),
+            { folder: `/vinted/offer/${newOffer.id}` }
+          );
+          arrayOfPicturesUrl.push(result.secure_url);
+          console.log(arrayOfPicturesUrl);
+        });
+        newOffer.product_pictures = arrayOfPicturesUrl;
+      }
       // console.log(newOffer);
       // await newOffer.save();
-      // console.log(offerId);
+      // console.log(req.files.picture);
       // const picture = convertToBase64(req.files.picture);
 
       await newOffer.save();
@@ -149,6 +161,22 @@ router.get("/offer/:id", async (req, res) => {
     );
     // console.log(offerById);
     res.status(200).json(offerById);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.put("/offer/update", isAuthenticated, async (req, res) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.delete("/offer/delete", isAuthenticated, async (req, res) => {
+  try {
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: error.message });
