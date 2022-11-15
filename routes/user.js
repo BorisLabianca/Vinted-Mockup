@@ -32,7 +32,7 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
     // console.log(salt + password);
     // console.log(hash);
     const token = uid2(64);
-    const picture = convertToBase64(req.files.avatar);
+
     const newUser = new User({
       email: email,
       account: { username: username },
@@ -45,10 +45,15 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
     // const savedData = await User.findOne({ email: email });
     // console.log(savedData._id);
     const userId = newUser.id;
-    const uploadedPicture = await cloudinary.uploader.upload(picture, {
-      folder: `/vinted/user/${userId}`,
-    });
-    newUser.account.avatar = uploadedPicture;
+    if (req?.files?.avatar) {
+      // console.log(req.files);
+      const picture = convertToBase64(req.files.avatar);
+      const uploadedPicture = await cloudinary.uploader.upload(picture, {
+        folder: `/vinted/user/${userId}`,
+      });
+      newUser.account.avatar = uploadedPicture;
+    }
+
     await newUser.save();
     res
       .status(200)
