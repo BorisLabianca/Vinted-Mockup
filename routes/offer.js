@@ -58,6 +58,10 @@ router.post(
           }
         );
         newOffer.product_image = uploadedPicture;
+      } else {
+        return res.status(404).json({
+          message: "A product picture is required to submit the offer.",
+        });
       }
       // if (req.files?.picture && req.files.picture.length !== 0) {
       //   const arrayOfPicturesUrl = [];
@@ -76,6 +80,7 @@ router.post(
       // }
       if (req.files?.picture && req.files.picture.length !== 0) {
         const arrayOfPicturesUrl = [];
+        // console.log(req.files?.picture);
         // const getUrls = async () => {
         for (let i = 0; i < req.files.picture.length; i++) {
           let result = await cloudinary.uploader.upload(
@@ -85,6 +90,7 @@ router.post(
             }
           );
           arrayOfPicturesUrl.push(result.secure_url);
+
           // if (arrayOfPicturesUrl.length === req.files.picture.length) {
           //   return arrayOfPicturesUrl;
           // }
@@ -163,7 +169,7 @@ router.get("/offers", async (req, res) => {
       .sort(sorting)
       .skip(skip)
       .limit(limit)
-      .select("product_name product_price -_id")
+      .select()
       .populate("owner", "account _id");
     const offerCount = await Offer.countDocuments(filter);
     res.status(200).json({ count: offerCount, offers: allOffers });

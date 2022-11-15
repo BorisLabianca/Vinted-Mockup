@@ -80,7 +80,7 @@ router.post("/user/login", async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
     res.status(200).json({
-      _id: savedInfo.id,
+      _id: savedInfo._id,
       token: savedInfo.token,
       account: savedInfo.account,
     });
