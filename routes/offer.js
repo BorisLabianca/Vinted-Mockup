@@ -16,6 +16,19 @@ router.post(
     try {
       const { title, description, price, condition, city, brand, size, color } =
         req.body;
+      if (
+        !title ||
+        !description ||
+        !price ||
+        !condition ||
+        !city ||
+        !brand ||
+        !size ||
+        !color ||
+        !req.files
+      ) {
+        return res.status(400).json({ message: "Missing parameters." });
+      }
       if (description.length > 500) {
         return res.status(404).json({
           message: "The description must be shorter than 500 characters",
@@ -28,7 +41,7 @@ router.post(
       }
       if (price > 100000) {
         return res.status(404).json({
-          message: "The price must be shorter lower than 100000 euros",
+          message: "The price must be lower than 100000 euros",
         });
       }
       // console.log(uploadedPicture);
